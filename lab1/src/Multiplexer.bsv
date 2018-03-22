@@ -11,7 +11,7 @@ function Bit#(1) not1(Bit#(1) a);
 endfunction
 
 function Bit#(1) multiplexer1(Bit#(1) sel, Bit#(1) a, Bit#(1) b);
-  return (sel == 0)? a : b;
+  return or1(and1(not1(sel), a), and1(sel, b));
 endfunction
 
 function Bit#(64) multiplexer64(Bit#(1) sel, Bit#(64) a, Bit#(64) b);
