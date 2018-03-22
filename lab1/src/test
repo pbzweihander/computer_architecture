@@ -1,0 +1,22 @@
+#!/bin/sh
+BINDIR=../build/bin
+
+if [ "$1" = "mul" -o "$1" = "rl" -o "$1" = "ra" ];
+then
+	$BINDIR/"sim_$1"
+elif [ "$1" = "all" ];
+then
+	echo "=== mul ==="
+	$BINDIR/"sim_mul"
+
+	echo " "
+	echo "=== rl ==="
+	$BINDIR/"sim_rl"
+
+	echo " "
+	echo "=== ra ==="
+	$BINDIR/"sim_ra"
+else
+	echo "usage: test [type]"
+	echo "	type - mul / rl / ra / all"
+fi
