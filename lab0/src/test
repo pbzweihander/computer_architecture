@@ -1,0 +1,24 @@
+#!/bin/sh
+
+bindir=../build/bin
+
+if [ "$1" = "hihohiho" -o "$1" = "hihihoho" -o "$1" = "hello" ];
+then
+	$bindir/"test_$1"
+elif [ "$1" = "all" ];
+then
+    echo "=== hello ==="
+    $bindir/"test_hello"
+
+	echo " "
+	echo "=== hihohiho ==="
+	$bindir/"test_hihohiho"
+
+    echo " "
+    echo "=== hihihoho ==="
+    $bindir/"test_hihihoho"
+	
+else
+	echo "usage: test [type]"
+	echo "	type - hello / hihihoho / hihohiho / all"
+fi
