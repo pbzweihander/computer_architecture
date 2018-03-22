@@ -23,10 +23,17 @@ endfunction
 
 typedef 64 N;
 function Bit#(N) multiplexerN(Bit#(1) sel, Bit#(N) a, Bit#(N) b);
-  return (sel == 0)? a : b;
+  // Bit#(N) aggregate;
+  // for (Integer i = 0; i < valueOf(N); i = i + 1)
+  //   aggregate[i] = multiplexer1(sel, a[i], b[i]);
+  // return aggregate;
+  return multiplexer_n(sel, a, b);
 endfunction
 
 //typedef 64 N; // Not needed
 function Bit#(n) multiplexer_n(Bit#(1) sel, Bit#(n) a, Bit#(n) b);
-  return (sel == 0)? a : b;
+  Bit#(n) aggregate;
+  for (Integer i = 0; i < valueOf(n); i = i + 1)
+    aggregate[i] = multiplexer1(sel, a[i], b[i]);
+  return aggregate;
 endfunction
