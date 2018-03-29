@@ -1,0 +1,37 @@
+#!/bin/sh
+
+bdir=../build/bin
+
+case "$1" in
+	"left")
+		$bdir/"sim_Left"
+		;;
+	"lp")
+		$bdir/"sim_LP"
+		;;
+	"rlp")
+		$bdir/"sim_RLP"
+		;;
+	"rap")
+		$bdir/"sim_RAP"
+		;;
+	"all")
+		echo "=== left ==="
+		$bdir/"sim_Left"
+
+		echo " "
+		echo "=== lp ==="
+		$bdir/"sim_LP"
+
+		echo " "
+		echo "=== rlp ==="
+		$bdir/"sim_RLP"
+
+		echo " "
+		echo "=== rap ==="
+		$bdir/"sim_RAP"
+		;;
+	*)
+		echo "usage: test {type}"
+		echo "	type - {left | lp | rlp | rap | all}"
+esac
