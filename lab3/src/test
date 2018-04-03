@@ -1,0 +1,58 @@
+#!/bin/sh
+
+bindir=../build/bin
+
+case "$1" in
+	"fold")
+		$bindir/"sim_fold"
+		;;
+	"pipe")
+		$bindir/"sim_pipe"
+		;;
+	"sfol1")
+		$bindir/"sim_sfol1"
+		;;
+	"sfol2")
+		$bindir/"sim_sfol2"
+		;;
+	"sfol4")
+		$bindir/"sim_sfol4"
+		;;
+	"sfol8")
+		$bindir/"sim_sfol8"
+		;;
+	"sfol16")
+		$bindir/"sim_sfol16"
+		;;
+	"all")
+		echo "=== fold ==="
+		$bindir/"sim_fold"
+
+		echo " "
+		echo "=== pipe ==="
+		$bindir/"sim_pipe"
+
+		echo " "
+		echo "=== sfol1 ==="
+		$bindir/"sim_sfol1"
+
+		echo " "
+		echo "=== sfol2 ==="
+		$bindir/"sim_sfol2"
+
+		echo " "
+		echo "=== sfol4 ==="
+		$bindir/"sim_sfol4"
+
+		echo " "
+		echo "=== sfol8 ==="
+		$bindir/"sim_sfol8"
+
+		echo " "
+		echo "=== sfol16 ==="
+		$bindir/"sim_sfol16"
+		;;
+	*)
+		echo "usage: test [type]"
+		echo "	type - fold / pipe / sfol1 / sfol2 / sfol4 / sfol8 / sfol16 / all"
+esac
