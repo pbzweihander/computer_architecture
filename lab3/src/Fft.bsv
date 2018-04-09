@@ -171,12 +171,48 @@ module mkFftSuperFolded(SuperFoldedFft#(radix)) provisos(Div#(TDiv#(FftPoints, 4
     Fifo#(2, Vector#(FftPoints, ComplexData)) inFifo <- mkCFFifo;
     Fifo#(2, Vector#(FftPoints, ComplexData)) outFifo <- mkCFFifo;
     Vector#(radix, Bfly4) bfly <- replicateM(mkBfly4);
-    Reg#(Maybe#(FftPoints, ComplexData)) stage_reg = mkReg(tagged Invalid);
+    Reg#(Maybe#(Vector#(FftPoints, ComplexData))) stage_reg <- mkReg(tagged Invalid);
+    Reg#(Bit#(3)) stage_count_reg <- mkReg(0);
+    Reg#(Bit#(6)) i_reg <- mkReg(0);
 
-    rule doFft;
-        //TODO: Remove below two lines Implement the rest of this module
-        outFifo.enq(inFifo.first);
+    rule startFft(!isValid(stage_reg));
         inFifo.deq;
+        stage_reg <= tagged Valid inFifo.first;
+        stage_count_reg <= 0;
+        i_reg <= 0;
+    endrule
+
+    rule increaseStage(i_reg == fromInteger(valueOf(times)) && stage_count_reg < 3);
+        stage_count_reg <= stage_count_reg + 1;
+        i_reg <= 0;
+    endrule
+
+    rule doFft(isValid(stage_reg) && i_reg < fromInteger(valueOf(times)) && stage_count_reg < 3);
+        Vector#(FftPoints, ComplexData) current_stage = validValue(stage_reg);
+        for (FftIdx j = 0; j < fromInteger(valueOf(radix)); j = j + 1) begin
+            FftIdx idx = i_reg * fromInteger(valueOf(radix)) * 4 + j * 4;
+
+            Vector#(4, ComplexData) x;
+            Vector#(4, ComplexData) twid;
+            for (FftIdx k = 0; k < 4; k = k + 1 ) begin
+                x[k] = current_stage[idx+k];
+                twid[k] = getTwiddle(stage_count_reg, idx + k);
+            end
+            let y = bfly[j].bfly4(twid, x);
+
+            Vector#(FftPoints, ComplexData) stage_temp = current_stage;
+            for (FftIdx k = 0; k < 4; k = k + 1)
+                stage_temp[idx + k] = y[k];
+
+            current_stage = idx == 60 ? permute(stage_temp) : stage_temp;
+        end
+        stage_reg <= tagged Valid current_stage;
+        i_reg <= i_reg + 1;
+    endrule
+
+    rule endFft(isValid(stage_reg) && stage_count_reg == 3);
+        outFifo.enq(validValue(stage_reg));
+        stage_reg <= tagged Invalid;
     endrule
 
     method Action enq(Vector#(FftPoints, ComplexData) in);
