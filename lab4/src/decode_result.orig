@@ -1,0 +1,421 @@
+Warning: file 'memory.vmh' for memory 'iMem' has a gap at addresses 17 to 67108863.
+===========Instruction Decoding===========
+Instruction Type:		nop
+Opq Function:			Nop
+Condition Type:			always
+Destination Register:	dstE : Invalid
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		Invalid
+Constant Value:			Invalid
+==========================================
+
+
+cycle          0
+
+===========Instruction Decoding===========
+Instruction Type:		halt
+Opq Function:			Nop
+Condition Type:			always
+Destination Register:	dstE : Invalid
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		Invalid
+Constant Value:			Invalid
+==========================================
+
+
+cycle          1
+
+===========Instruction Decoding===========
+Instruction Type:		cmov
+Opq Function:			Nop
+Condition Type:			always
+Destination Register:	dstE :  3
+						dstM : Invalid
+Source Register A:		 0
+Source Register B:		Invalid
+Constant Value:			Invalid
+==========================================
+
+
+cycle          2
+
+===========Instruction Decoding===========
+Instruction Type:		cmov
+Opq Function:			Nop
+Condition Type:			less than
+Destination Register:	dstE :  3
+						dstM : Invalid
+Source Register A:		 0
+Source Register B:		Invalid
+Constant Value:			Invalid
+==========================================
+
+
+cycle          3
+
+===========Instruction Decoding===========
+Instruction Type:		cmov
+Opq Function:			Nop
+Condition Type:			less than or equal
+Destination Register:	dstE :  3
+						dstM : Invalid
+Source Register A:		 0
+Source Register B:		Invalid
+Constant Value:			Invalid
+==========================================
+
+
+cycle          4
+
+===========Instruction Decoding===========
+Instruction Type:		cmov
+Opq Function:			Nop
+Condition Type:			equal
+Destination Register:	dstE :  3
+						dstM : Invalid
+Source Register A:		 0
+Source Register B:		Invalid
+Constant Value:			Invalid
+==========================================
+
+
+cycle          5
+
+===========Instruction Decoding===========
+Instruction Type:		cmov
+Opq Function:			Nop
+Condition Type:			not equal
+Destination Register:	dstE :  3
+						dstM : Invalid
+Source Register A:		 0
+Source Register B:		Invalid
+Constant Value:			Invalid
+==========================================
+
+
+cycle          6
+
+===========Instruction Decoding===========
+Instruction Type:		cmov
+Opq Function:			Nop
+Condition Type:			greater than or equal
+Destination Register:	dstE :  3
+						dstM : Invalid
+Source Register A:		 0
+Source Register B:		Invalid
+Constant Value:			Invalid
+==========================================
+
+
+cycle          7
+
+===========Instruction Decoding===========
+Instruction Type:		cmov
+Opq Function:			Nop
+Condition Type:			greater than
+Destination Register:	dstE :  3
+						dstM : Invalid
+Source Register A:		 0
+Source Register B:		Invalid
+Constant Value:			Invalid
+==========================================
+
+
+cycle          8
+
+===========Instruction Decoding===========
+Instruction Type:		irmovq
+Opq Function:			Nop
+Condition Type:			always
+Destination Register:	dstE :  0
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		Invalid
+Constant Value:		                   0
+==========================================
+
+
+cycle          9
+
+===========Instruction Decoding===========
+Instruction Type:		rmmovq
+Opq Function:			Add
+Condition Type:			always
+Destination Register:	dstE : Invalid
+						dstM : Invalid
+Source Register A:		 0
+Source Register B:		 3
+Constant Value:		                   0
+==========================================
+
+
+cycle         10
+
+===========Instruction Decoding===========
+Instruction Type:		mrmovq
+Opq Function:			Add
+Condition Type:			always
+Destination Register:	dstE : Invalid
+						dstM :  3
+Source Register A:		Invalid
+Source Register B:		 0
+Constant Value:		                   0
+==========================================
+
+
+cycle         11
+
+===========Instruction Decoding===========
+Instruction Type:		opq
+Opq Function:			Add
+Condition Type:			always
+Destination Register:	dstE :  3
+						dstM : Invalid
+Source Register A:		 0
+Source Register B:		 3
+Constant Value:			Invalid
+==========================================
+
+
+cycle         12
+
+===========Instruction Decoding===========
+Instruction Type:		opq
+Opq Function:			Sub
+Condition Type:			always
+Destination Register:	dstE :  3
+						dstM : Invalid
+Source Register A:		 0
+Source Register B:		 3
+Constant Value:			Invalid
+==========================================
+
+
+cycle         13
+
+===========Instruction Decoding===========
+Instruction Type:		opq
+Opq Function:			And
+Condition Type:			always
+Destination Register:	dstE :  3
+						dstM : Invalid
+Source Register A:		 0
+Source Register B:		 3
+Constant Value:			Invalid
+==========================================
+
+
+cycle         14
+
+===========Instruction Decoding===========
+Instruction Type:		opq
+Opq Function:			Xor
+Condition Type:			always
+Destination Register:	dstE :  3
+						dstM : Invalid
+Source Register A:		 0
+Source Register B:		 3
+Constant Value:			Invalid
+==========================================
+
+
+cycle         15
+
+===========Instruction Decoding===========
+Instruction Type:		jmp
+Opq Function:			Nop
+Condition Type:			always
+Destination Register:	dstE : Invalid
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		Invalid
+Constant Value:		                 120
+==========================================
+
+
+cycle         16
+
+===========Instruction Decoding===========
+Instruction Type:		jmp
+Opq Function:			Nop
+Condition Type:			less than
+Destination Register:	dstE : Invalid
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		Invalid
+Constant Value:		                 120
+==========================================
+
+
+cycle         17
+
+===========Instruction Decoding===========
+Instruction Type:		jmp
+Opq Function:			Nop
+Condition Type:			less than or equal
+Destination Register:	dstE : Invalid
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		Invalid
+Constant Value:		                 120
+==========================================
+
+
+cycle         18
+
+===========Instruction Decoding===========
+Instruction Type:		jmp
+Opq Function:			Nop
+Condition Type:			equal
+Destination Register:	dstE : Invalid
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		Invalid
+Constant Value:		                 120
+==========================================
+
+
+cycle         19
+
+===========Instruction Decoding===========
+Instruction Type:		jmp
+Opq Function:			Nop
+Condition Type:			not equal
+Destination Register:	dstE : Invalid
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		Invalid
+Constant Value:		                 120
+==========================================
+
+
+cycle         20
+
+===========Instruction Decoding===========
+Instruction Type:		jmp
+Opq Function:			Nop
+Condition Type:			greater than or equal
+Destination Register:	dstE : Invalid
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		Invalid
+Constant Value:		                 120
+==========================================
+
+
+cycle         21
+
+===========Instruction Decoding===========
+Instruction Type:		jmp
+Opq Function:			Nop
+Condition Type:			greater than
+Destination Register:	dstE : Invalid
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		Invalid
+Constant Value:		                 120
+==========================================
+
+
+cycle         22
+
+===========Instruction Decoding===========
+Instruction Type:		call
+Opq Function:			Sub
+Condition Type:			always
+Destination Register:	dstE :  4
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		 4
+Constant Value:		                 240
+==========================================
+
+
+cycle         23
+
+===========Instruction Decoding===========
+Instruction Type:		ret
+Opq Function:			Add
+Condition Type:			always
+Destination Register:	dstE :  4
+						dstM : Invalid
+Source Register A:		 4
+Source Register B:		 4
+Constant Value:			Invalid
+==========================================
+
+
+cycle         24
+
+===========Instruction Decoding===========
+Instruction Type:		push
+Opq Function:			Sub
+Condition Type:			always
+Destination Register:	dstE :  4
+						dstM : Invalid
+Source Register A:		 5
+Source Register B:		 4
+Constant Value:			Invalid
+==========================================
+
+
+cycle         25
+
+===========Instruction Decoding===========
+Instruction Type:		pop
+Opq Function:			Add
+Condition Type:			always
+Destination Register:	dstE :  4
+						dstM :  5
+Source Register A:		 4
+Source Register B:		 4
+Constant Value:			Invalid
+==========================================
+
+
+cycle         26
+
+===========Instruction Decoding===========
+Instruction Type:		halt
+Opq Function:			Nop
+Condition Type:			always
+Destination Register:	dstE : Invalid
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		Invalid
+Constant Value:			Invalid
+==========================================
+
+
+cycle         27
+
+===========Instruction Decoding===========
+Instruction Type:		halt
+Opq Function:			Nop
+Condition Type:			always
+Destination Register:	dstE : Invalid
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		Invalid
+Constant Value:			Invalid
+==========================================
+
+
+cycle         28
+
+===========Instruction Decoding===========
+Instruction Type:		halt
+Opq Function:			Nop
+Condition Type:			always
+Destination Register:	dstE : Invalid
+						dstM : Invalid
+Source Register A:		Invalid
+Source Register B:		Invalid
+Constant Value:			Invalid
+==========================================
+
+
+cycle         29
+

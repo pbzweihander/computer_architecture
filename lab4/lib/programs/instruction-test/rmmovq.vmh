@@ -1,0 +1,38 @@
+// Original Code
+// @000                	// .pos 0
+//                     	// Init:
+//                     	// # Set Values
+// 30f37800000000000000	//   0:  irmovq Array, %rbx # rbx = *ar[0]
+// 30f10300000000000000	//  10:  irmovq $3, %rcx    # rcx = 3
+// 30f2fdffffffffffffff	//  20:  irmovq $-3, %rdx   # rdx = -3
+// 
+//                     	// # Move values into Memory using rmmovq
+// 40130000000000000000	//  30:  rmmovq %rcx, (%rbx)    # ar[0] = 3
+// 40230800000000000000	//  40:  rmmovq %rdx, 8(%rbx)   # ar[1] = -3
+// 
+//                     	// # Read the memory value into registers
+// 50030000000000000000	//  50:  mrmovq (%rbx), %rax    # rax = ar[0] = 3
+// 50630800000000000000	//  60:  mrmovq 8(%rbx), %rsi   # rsi = ar[1] = -3
+// 
+//                     	// # Check the result
+// 6060                	//  70:  addq %rsi, %rax # rax = 3 + (-3) = 0
+// c00e                	//  72:  mtc0 %rax, $14
+// 00                  	//  74:  halt
+// 
+// @00f                	// .pos 120
+//                     	// .align 8
+//                     	// Array:
+
+
+// VMH Format Result
+@000
+30f3780000000000
+000030f103000000
+0000000030f2fdff
+ffffffffffff4013
+0000000000000000
+4023080000000000
+0000500300000000
+0000000050630800
+0000000000006060
+c00e000000000000

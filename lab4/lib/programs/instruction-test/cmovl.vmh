@@ -1,0 +1,24 @@
+// Original Code
+// @000                	// .pos 0
+//                     	// Init:
+//                     	// # Set Values
+// 30f1fdffffffffffffff	//   0:  irmovq $-3, %rcx # rcx = -3
+// 30f0ffffffffffffffff	//  10:  irmovq $-1, %rax # rax = -1
+// 30f30000000000000000	//  20:  irmovq $0, %rbx  # rbx = 0
+// 
+//                     	// # Test cmovge
+// 6211                	//  30:  andq %rcx, %rcx   # SF = 1 and ZF = 0 (less)
+// 2230                	//  32:  cmovl %rbx, %rax  # rax = 0
+// 
+//                     	// # Check result
+// c00e                	//  34:  mtc0 %rax, $14
+// 00                  	//  36:  halt
+
+
+// VMH Format Result
+@000
+30f1fdffffffffff
+ffff30f0ffffffff
+ffffffff30f30000
+0000000000006211
+2230c00e00000000
