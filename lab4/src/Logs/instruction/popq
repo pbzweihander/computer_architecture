@@ -1,0 +1,246 @@
+Warning: file 'memory.vmh' for memory 'dMem' has a gap at addresses 9 to 67108863.
+Warning: file 'memory.vmh' for memory 'iMem' has a gap at addresses 9 to 67108863.
+
+Cycle                    0 ----------------------------------------------------
+
+cycle          0
+Fetch : from Pc                    0 , expanded inst : 30f47800000000000000, 
+irmovq $'h0000000000000078,  %'h4
+
+Cycle                    1 ----------------------------------------------------
+
+cycle          1
+Decode : from Pc                    0 , expanded inst : 30f47800000000000000, 
+irmovq $'h0000000000000078,  %'h4
+Exec : ppc                   10
+
+Cycle                    2 ----------------------------------------------------
+
+cycle          2
+On  4, writes                  120 (wrE)
+
+Cycle                    3 ----------------------------------------------------
+
+cycle          3
+Fetch : from Pc                   10 , expanded inst : 30f57800000000000000, 
+irmovq $'h0000000000000078,  %'h5
+
+Cycle                    4 ----------------------------------------------------
+
+cycle          4
+Decode : from Pc                   10 , expanded inst : 30f57800000000000000, 
+irmovq $'h0000000000000078,  %'h5
+Exec : ppc                   20
+
+Cycle                    5 ----------------------------------------------------
+
+cycle          5
+On  5, writes                  120 (wrE)
+
+Cycle                    6 ----------------------------------------------------
+
+cycle          6
+Fetch : from Pc                   20 , expanded inst : 30f30700000000000000, 
+irmovq $'h0000000000000007,  %'h3
+
+Cycle                    7 ----------------------------------------------------
+
+cycle          7
+Decode : from Pc                   20 , expanded inst : 30f30700000000000000, 
+irmovq $'h0000000000000007,  %'h3
+Exec : ppc                   30
+
+Cycle                    8 ----------------------------------------------------
+
+cycle          8
+On  3, writes                    7 (wrE)
+
+Cycle                    9 ----------------------------------------------------
+
+cycle          9
+Fetch : from Pc                   30 , expanded inst : 30f10900000000000000, 
+irmovq $'h0000000000000009,  %'h1
+
+Cycle                   10 ----------------------------------------------------
+
+cycle         10
+Decode : from Pc                   30 , expanded inst : 30f10900000000000000, 
+irmovq $'h0000000000000009,  %'h1
+Exec : ppc                   40
+
+Cycle                   11 ----------------------------------------------------
+
+cycle         11
+On  1, writes                    9 (wrE)
+
+Cycle                   12 ----------------------------------------------------
+
+cycle         12
+Fetch : from Pc                   40 , expanded inst : 30f0f0ffffffffffffff, 
+irmovq $'hfffffffffffffff0,  %'h0
+
+Cycle                   13 ----------------------------------------------------
+
+cycle         13
+Decode : from Pc                   40 , expanded inst : 30f0f0ffffffffffffff, 
+irmovq $'hfffffffffffffff0,  %'h0
+Exec : ppc                   50
+
+Cycle                   14 ----------------------------------------------------
+
+cycle         14
+On  0, writes 18446744073709551600 (wrE)
+
+Cycle                   15 ----------------------------------------------------
+
+cycle         15
+Fetch : from Pc                   50 , expanded inst : a03fa01fb06fb07f6060, 
+push %'h3
+
+Cycle                   16 ----------------------------------------------------
+
+cycle         16
+Decode : from Pc                   50 , expanded inst : a03fa01fb06fb07f6060, 
+push %'h3
+Exec : ppc                   52
+
+Cycle                   17 ----------------------------------------------------
+
+cycle         17
+Stored                    7 into                  112
+Stat update
+
+Cycle                   18 ----------------------------------------------------
+
+cycle         18
+On  4, writes                  112 (wrE)
+
+Cycle                   19 ----------------------------------------------------
+
+cycle         19
+Fetch : from Pc                   52 , expanded inst : a01fb06fb07f60606070, 
+push %'h1
+
+Cycle                   20 ----------------------------------------------------
+
+cycle         20
+Decode : from Pc                   52 , expanded inst : a01fb06fb07f60606070, 
+push %'h1
+Exec : ppc                   54
+
+Cycle                   21 ----------------------------------------------------
+
+cycle         21
+Stored                    9 into                  104
+Stat update
+
+Cycle                   22 ----------------------------------------------------
+
+cycle         22
+On  4, writes                  104 (wrE)
+
+Cycle                   23 ----------------------------------------------------
+
+cycle         23
+Fetch : from Pc                   54 , expanded inst : b06fb07f60606070c00e, 
+pop %'h6
+
+Cycle                   24 ----------------------------------------------------
+
+cycle         24
+Decode : from Pc                   54 , expanded inst : b06fb07f60606070c00e, 
+pop %'h6
+Exec : ppc                   56
+
+Cycle                   25 ----------------------------------------------------
+
+cycle         25
+Loaded                    9 from                  104
+Stat update
+
+Cycle                   26 ----------------------------------------------------
+
+cycle         26
+On  4, writes                  112 (wrE)
+On  6, writes                    9 (wrM)
+
+Cycle                   27 ----------------------------------------------------
+
+cycle         27
+Fetch : from Pc                   56 , expanded inst : b07f60606070c00e0000, 
+pop %'h7
+
+Cycle                   28 ----------------------------------------------------
+
+cycle         28
+Decode : from Pc                   56 , expanded inst : b07f60606070c00e0000, 
+pop %'h7
+Exec : ppc                   58
+
+Cycle                   29 ----------------------------------------------------
+
+cycle         29
+Loaded                    7 from                  112
+Stat update
+
+Cycle                   30 ----------------------------------------------------
+
+cycle         30
+On  4, writes                  120 (wrE)
+On  7, writes                    7 (wrM)
+
+Cycle                   31 ----------------------------------------------------
+
+cycle         31
+Fetch : from Pc                   58 , expanded inst : 60606070c00e00000000, 
+addq %'h6, %'h0
+
+Cycle                   32 ----------------------------------------------------
+
+cycle         32
+Decode : from Pc                   58 , expanded inst : 60606070c00e00000000, 
+addq %'h6, %'h0
+Exec : ppc                   60
+
+Cycle                   33 ----------------------------------------------------
+
+cycle         33
+On  0, writes 18446744073709551609 (wrE)
+
+Cycle                   34 ----------------------------------------------------
+
+cycle         34
+Fetch : from Pc                   60 , expanded inst : 6070c00e000000000000, 
+addq %'h7, %'h0
+
+Cycle                   35 ----------------------------------------------------
+
+cycle         35
+Decode : from Pc                   60 , expanded inst : 6070c00e000000000000, 
+addq %'h7, %'h0
+Exec : ppc                   62
+
+Cycle                   36 ----------------------------------------------------
+
+cycle         36
+On  0, writes                    0 (wrE)
+
+Cycle                   37 ----------------------------------------------------
+
+cycle         37
+Fetch : from Pc                   62 , expanded inst : c00e0000000000000000, 
+mtc0 %'h0, %'he
+
+Cycle                   38 ----------------------------------------------------
+
+cycle         38
+Decode : from Pc                   62 , expanded inst : c00e0000000000000000, 
+mtc0 %'h0, %'he
+Exec : ppc                   64
+
+Cycle                   39 ----------------------------------------------------
+
+cycle         39
+On 14, writes                    0 (wrE)
+
+Cycle                   40 ----------------------------------------------------

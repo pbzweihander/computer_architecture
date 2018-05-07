@@ -1,0 +1,120 @@
+Warning: file 'memory.vmh' for memory 'dMem' has a gap at addresses 6 to 9.
+Warning: file 'memory.vmh' for memory 'dMem' has a gap at addresses 12 to 67108863.
+Warning: file 'memory.vmh' for memory 'iMem' has a gap at addresses 6 to 9.
+Warning: file 'memory.vmh' for memory 'iMem' has a gap at addresses 12 to 67108863.
+
+Cycle                    0 ----------------------------------------------------
+
+cycle          0
+Fetch : from Pc                    0 , expanded inst : 30f5a000000000000000, 
+irmovq $'h00000000000000a0,  %'h5
+
+Cycle                    1 ----------------------------------------------------
+
+cycle          1
+Decode : from Pc                    0 , expanded inst : 30f5a000000000000000, 
+irmovq $'h00000000000000a0,  %'h5
+Exec : ppc                   10
+
+Cycle                    2 ----------------------------------------------------
+
+cycle          2
+On  5, writes                  160 (wrE)
+
+Cycle                    3 ----------------------------------------------------
+
+cycle          3
+Fetch : from Pc                   10 , expanded inst : 30f4a000000000000000, 
+irmovq $'h00000000000000a0,  %'h4
+
+Cycle                    4 ----------------------------------------------------
+
+cycle          4
+Decode : from Pc                   10 , expanded inst : 30f4a000000000000000, 
+irmovq $'h00000000000000a0,  %'h4
+Exec : ppc                   20
+
+Cycle                    5 ----------------------------------------------------
+
+cycle          5
+On  4, writes                  160 (wrE)
+
+Cycle                    6 ----------------------------------------------------
+
+cycle          6
+Fetch : from Pc                   20 , expanded inst : 30f0ffffffffffffffff, 
+irmovq $'hffffffffffffffff,  %'h0
+
+Cycle                    7 ----------------------------------------------------
+
+cycle          7
+Decode : from Pc                   20 , expanded inst : 30f0ffffffffffffffff, 
+irmovq $'hffffffffffffffff,  %'h0
+Exec : ppc                   30
+
+Cycle                    8 ----------------------------------------------------
+
+cycle          8
+On  0, writes 18446744073709551615 (wrE)
+
+Cycle                    9 ----------------------------------------------------
+
+cycle          9
+Fetch : from Pc                   30 , expanded inst : 805000000000000000c0, 
+call 'h0000000000000050
+
+Cycle                   10 ----------------------------------------------------
+
+cycle         10
+Decode : from Pc                   30 , expanded inst : 805000000000000000c0, 
+call 'h0000000000000050
+Exec : ppc                   39
+
+Cycle                   11 ----------------------------------------------------
+
+cycle         11
+Stored                   39 into                  152
+Stat update
+
+Cycle                   12 ----------------------------------------------------
+
+cycle         12
+On  4, writes                  152 (wrE)
+
+Cycle                   13 ----------------------------------------------------
+
+cycle         13
+Fetch : from Pc                   80 , expanded inst : 30f00000000000000000, 
+irmovq $'h0000000000000000,  %'h0
+
+Cycle                   14 ----------------------------------------------------
+
+cycle         14
+Decode : from Pc                   80 , expanded inst : 30f00000000000000000, 
+irmovq $'h0000000000000000,  %'h0
+Exec : ppc                   90
+
+Cycle                   15 ----------------------------------------------------
+
+cycle         15
+On  0, writes                    0 (wrE)
+
+Cycle                   16 ----------------------------------------------------
+
+cycle         16
+Fetch : from Pc                   90 , expanded inst : c00e00000000aaaaaaaa, 
+mtc0 %'h0, %'he
+
+Cycle                   17 ----------------------------------------------------
+
+cycle         17
+Decode : from Pc                   90 , expanded inst : c00e00000000aaaaaaaa, 
+mtc0 %'h0, %'he
+Exec : ppc                   92
+
+Cycle                   18 ----------------------------------------------------
+
+cycle         18
+On 14, writes                    0 (wrE)
+
+Cycle                   19 ----------------------------------------------------

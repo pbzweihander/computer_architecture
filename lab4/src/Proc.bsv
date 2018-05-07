@@ -9,7 +9,9 @@ import Exec::*;
 import Cop::*;
 import Fifo::*;
 
-typedef enum {Fetch, Execute} Stage deriving(Bits, Eq);
+typedef enum {
+    Fetch, Execute, Memory, WriteBack
+} Stage deriving(Bits, Eq);
 
 (*synthesize*)
 module mkProc(Proc);
@@ -26,6 +28,7 @@ module mkProc(Proc);
     Fifo#(1,ProcStatus) statRedirect <- mkBypassFifo;
 
     Reg#(Inst) f2e <- mkRegU;
+    Reg#(ExecInst) regInst <- mkRegU;
 
     rule doFetch(cop.started && stat == AOK && stage == Fetch);
         /* Fetch */
@@ -36,7 +39,7 @@ module mkProc(Proc);
         f2e <= inst;
     endrule
 
-    rule doRest(cop.started && stat == AOK && stage == Execute);
+    rule doExecute(cop.started && stat == AOK && stage == Execute);
         /* Decode */
         let inst = f2e;
         let dInst = decode(inst, pc);
@@ -52,19 +55,27 @@ module mkProc(Proc);
         let eInst = exec(dInst, condFlag, pc);
         condFlag <= eInst.condFlag;
 
+        stage <= case (eInst.iType)
+                MRmov, Pop, Ret, RMmov, Call, Push: Memory;
+                default: WriteBack;
+            endcase;
+        regInst <= eInst;
+
         $display("Exec : ppc %d", dInst.valP);
+    endrule
 
-
+    rule doMemory(cop.started && stat == AOK && stage == Memory);
         /* Memory */
+        let eInst = regInst;
         let iType = eInst.iType;
-        case(iType)
+        case (iType)
             MRmov, Pop, Ret: begin
                 let ldData <- (dMem.req(MemReq{op: Ld, addr: eInst.memAddr, data:?}));
                 eInst.valM = Valid(little2BigEndian(ldData));
 
                 $display("Loaded %d from %d",little2BigEndian(ldData), eInst.memAddr);
 
-                if(iType == Ret) begin
+                if (iType == Ret) begin
                     eInst.nextPc = eInst.valM;
                 end
             end
@@ -80,24 +91,29 @@ module mkProc(Proc);
                 $display("Stored %d into %d",stData, eInst.memAddr);
             end
         endcase
+        regInst <= eInst;
 
         /* Update Status */
-        let newStatus = case(iType)
+        let newStatus = case (iType)
                 Unsupported: INS;
                 Hlt: HLT;
                 default: AOK;
             endcase;
         statRedirect.enq(newStatus);
 
+        stage <= WriteBack;
+    endrule
 
+    rule doWriteBack(cop.started && stat == AOK && stage == WriteBack);
+        let eInst = regInst;
         /* WriteBack */
-        if(isValid(eInst.dstE)) begin
+        if (isValid(eInst.dstE)) begin
             $display("On %d, writes %d (wrE)", validRegValue(eInst.dstE), validValue(eInst.valE));
 
             rf.wrE(validRegValue(eInst.dstE), validValue(eInst.valE));
         end
 
-        if(isValid(eInst.dstM)) begin
+        if (isValid(eInst.dstM)) begin
             $display("On %d, writes %d (wrM)", validRegValue(eInst.dstM), validValue(eInst.valM));
 
             rf.wrM(validRegValue(eInst.dstM), validValue(eInst.valM));
