@@ -16,6 +16,12 @@ typedef struct {
     Bool epoch;
 } Fetch2Decode deriving(Bits, Eq);
 
+typedef struct {
+    DecodedInst inst;
+    Addr ppc;
+    Bool epoch;
+} Decode2Rest deriving(Bits, Eq);
+
 (*synthesize*)
 module mkProc(Proc);
     Reg#(Addr) pc <- mkRegU;
@@ -34,6 +40,8 @@ module mkProc(Proc);
 
     Reg#(Bool) fEpoch <- mkRegU;
     Reg#(Bool) eEpoch <- mkRegU;
+
+    Fifo#(2, Decode2Rest) decodeToRestQueue <- mkCFFifo;
 
     rule doFetch(cop.started && stat == AOK);
         let current_pc;
@@ -63,9 +71,7 @@ module mkProc(Proc);
         $display("Fetch : from Pc %d , expanded inst : %x, \n", pc, inst, showInst(inst));
     endrule
 
-    rule doRest(cop.started && stat == AOK);
-        /* TODO: Divide the doRest rule into doDecode, doRest rules to implement 3-stage pipelined processor */
-
+    rule doDecode(cop.started && stat == AOK);
         let inst = f2d.first.inst;
         let pc = f2d.first.pc;
         let ppc = f2d.first.ppc;
@@ -76,6 +82,21 @@ module mkProc(Proc);
             /* Decode */
             let dInst = decode(inst, pc);
 
+            decodeToRestQueue.enq(Decode2Rest {
+                    inst: dInst,
+                    ppc: ppc,
+                    epoch: iEpoch
+                });
+        end
+    endrule
+
+    rule doRest(cop.started && stat == AOK);
+        let dInst = decodeToRestQueue.first.inst;
+        let ppc = decodeToRestQueue.first.ppc;
+        let iEpoch = decodeToRestQueue.first.epoch;
+        decodeToRestQueue.deq;
+
+        if (iEpoch == eEpoch) begin
             /* Register Read */
             dInst.valA = isValid(dInst.regA)
                 ? tagged Valid rf.rdA(validRegValue(dInst.regA))
@@ -130,7 +151,6 @@ module mkProc(Proc);
                 $display("mispredicted, redirect %d ", redirPc);
                 execRedirect.enq(redirPc);
             end
-
 
             /* WriteBack */
             if (isValid(eInst.dstE)) begin
