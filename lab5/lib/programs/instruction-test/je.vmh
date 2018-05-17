@@ -1,0 +1,29 @@
+// Original Code
+// @000                	// .pos 0
+//                     	// Init:
+//                     	// # Set values
+// 30f0ffffffffffffffff	//   0:  irmovq $-1, %rax # rax = -1
+// 
+//                     	// # Test je
+// 6333                	//  10:  xorq %rbx, %rbx  # ZF = 1 (equal)
+// 733800000000000000  	//  12:  je Dest
+// 
+//                     	// # Wrong Answer if not jumped
+// c00e                	//  21:  mtc0 %rax, $14   # rax = -1 in here
+// 00                  	//  23:  halt
+// 
+// @007                	// .pos 56
+//                     	// Dest:
+// 30f00000000000000000	//  56:  irmovq $0, %rax # rax = 0
+// c00e                	//  66:  mtc0 %rax, $14  # rax = 0 here
+// 00                  	//  68:  halt
+
+
+// VMH Format Result
+@000
+30f0ffffffffffff
+ffff633373380000
+0000000000c00e00
+@007
+30f0000000000000
+0000c00e00000000

@@ -1,0 +1,35 @@
+// Original Code
+// @000                	// .pos 0
+//                     	// Init:
+//                     	// # Test mrmovq
+// 30f67800000000000000	//   0:  irmovq Array, %rsi    # *ar[0]
+// 50360000000000000000	//  10:  mrmovq (%rsi), %rbx   # rbx = ar[0] = 2
+// 50160800000000000000	//  20:  mrmovq 8(%rsi), %rcx  # rcx = ar[1] = 3
+// 
+// 30f0fbffffffffffffff	//  30:  irmovq $-5, %rax      # rax = (-5)
+// 6030                	//  40:  addq %rbx, %rax       # rax = (-5) + 2 = (-3)
+// 6010                	//  42:  addq %rcx, %rax       # rax = (-3) + 3 = 0
+// 
+//                     	// # Check Result
+// c00e                	//  44:  mtc0 %rax, $14
+// 00                  	//  46:  halt
+// 
+//                     	// # Memory Data
+// @00f                	// .pos 120
+//                     	// .align 8
+//                     	// Array:
+// 0200000000000000    	// 120:  .quad 0x2
+// 0300000000000000    	// 128:  .quad 0x3
+
+
+// VMH Format Result
+@000
+30f6780000000000
+0000503600000000
+0000000050160800
+00000000000030f0
+fbffffffffffffff
+60306010c00e0000
+@00f
+0200000000000000
+0300000000000000
