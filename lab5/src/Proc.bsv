@@ -112,8 +112,14 @@ module mkProc(Proc);
             let eInst = exec(dInst, condFlag, ppc);
             condFlag <= eInst.condFlag;
 
-            /* Memory */
             let iType = eInst.iType;
+
+            case (iType)
+                Call, Ret, Jmp: cop.incInstTypeCnt(Ctr);
+                MRmov, RMmov, Push, Pop: cop.incInstTypeCnt(Mem);
+            endcase
+
+            /* Memory */
             case (iType)
                 MRmov, Pop, Ret: begin
                     let ldData <- (dMem.req(MemReq{
@@ -123,7 +129,7 @@ module mkProc(Proc);
                         }));
                     eInst.valM = Valid(little2BigEndian(ldData));
 
-                    if (iType == Ret) begin //Return address is known here
+                    if (iType == Ret) begin // Return address is known here
                         eInst.nextPc = eInst.valM;
                     end
                 end
@@ -150,6 +156,7 @@ module mkProc(Proc);
                 let redirPc = validValue(eInst.nextPc);
                 $display("mispredicted, redirect %d ", redirPc);
                 execRedirect.enq(redirPc);
+                cop.incBPMissCnt();
             end
 
             /* WriteBack */
@@ -160,15 +167,6 @@ module mkProc(Proc);
                 rf.wrM(validRegValue(eInst.dstM), validValue(eInst.valM));
             end
             cop.wr(eInst.dstE, validValue(eInst.valE));
-
-            /* TODO: Exercise 3
-                1. Use cop.incInstTypeCnt(instType) to count number of each instruciton type
-                     - instType list
-                    Ctr(Control) : call, ret, jump
-                    Mem(Memory) : mrmovq, rmmovq, push, pop
-                2. Use cop.incBPMissCnt() to count number of mispredictions.
-            */
-
 
             /* TODO: Excercise 4
                 1. Implement incInstTypeCnt(InstCntType inst) method in Cop.bsv
