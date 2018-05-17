@@ -4,10 +4,8 @@ import CReg::*;
 import ConfigReg::*;
 import Fifo::*;
 
-typedef enum {Ctr, Mem} InstCntType deriving(Bits, Eq);
-
-/* TODO: Replace dummies to implement incMissInstTypeCnt */
-typedef enum {Dummy1, Dummy2, Dummy3} InstMissCntType deriving(Bits, Eq);
+typedef enum {Mem, Call, Ret, Jmp} InstCntType deriving(Bits, Eq);
+typedef enum {Call, Ret, Jmp} InstMissCntType deriving(Bits, Eq);
 
 interface Cop;
     method Action start;
@@ -29,8 +27,13 @@ module mkCop(Cop);
     Reg#(Data) finishCode <- mkConfigReg(0);
 
     Reg#(Data) numMem <- mkConfigReg(0);
-    Reg#(Data) numCtr <- mkConfigReg(0);
     Reg#(Data) numBPMiss <- mkConfigReg(0);
+    Reg#(Data) numCall <- mkConfigReg(0);
+    Reg#(Data) numRet <- mkConfigReg(0);
+    Reg#(Data) numJmp <- mkConfigReg(0);
+    Reg#(Data) numCallMiss <- mkConfigReg(0);
+    Reg#(Data) numRetMiss <- mkConfigReg(0);
+    Reg#(Data) numJmpMiss <- mkConfigReg(0);
 
     Fifo#(2, Tuple3#(RIndx, Data, Data)) copFifo <- mkCFFifo;
 
@@ -66,23 +69,22 @@ module mkCop(Cop);
         Register 22: (Write only) Finished executing
     */
     method Action wr(Maybe#(FullIndx) idx, Data val);
-        if(isValid(idx) && validValue(idx).regType == CopReg) begin
+        if (isValid(idx) && validValue(idx).regType == CopReg) begin
             case (validRegValue(idx))
                 12: copFifo.enq(tuple3(12, val, numInsts+1));
                 13: copFifo.enq(tuple3(13, val, numInsts+1));
                 14: begin
                     $fwrite(stderr, "==========================================\n");
                     $fwrite(stderr, "Specific type of executed instructions\n");
-                    $fwrite(stderr, "Ctr 		            : %d\n", numCtr);
+                    $fwrite(stderr, "Ctr 		            : %d\n", numCall + numRet + numJmp);
                     $fwrite(stderr, "Mem 		            : %d\n", numMem);
                     $fwrite(stderr, "Mispredicted	            : %d\n", numBPMiss);
                     $fwrite(stderr, "==========================================\n");
 
-                    /* TODO: Implement below to output counted values */
                     $fwrite(stderr, "Misprediction detail\n");
-                    $fwrite(stderr, "Call 		            : %d / %d\n" /* implement */);
-                    $fwrite(stderr, "Ret 		            : %d / %d\n"    /* implement */);
-                    $fwrite(stderr, "Jmp 		            : %d / %d\n" /* implement*/);
+                    $fwrite(stderr, "Call 		            : %d / %d\n", numCallMiss, numCall);
+                    $fwrite(stderr, "Ret 		            : %d / %d\n", numRetMiss, numRet);
+                    $fwrite(stderr, "Jmp 		            : %d / %d\n", numJmpMiss, numJmp);
                     $fwrite(stderr, "==========================================\n");
                     copFifo.enq(tuple3(14, val, numInsts+1));
                 end
@@ -92,15 +94,20 @@ module mkCop(Cop);
     endmethod
 
     method Action incInstTypeCnt(InstCntType inst);
-        case(inst)
-            Ctr : numCtr <= numCtr + 1;
+        case (inst)
             Mem : numMem <= numMem + 1; // rmmovq, mrmovq, push, pop
+            Call : numCall <= numCall + 1;
+            Ret : numRet <= numRet + 1;
+            Jmp : numJmp <= numJmp + 1;
         endcase
     endmethod
 
     method Action incMissInstTypeCnt(InstMissCntType inst);
-        /* TODO: Implement incMissInstTypeCnt */
-        noAction;
+        case (inst)
+            Call : numCallMiss <= numCallMiss + 1;
+            Ret : numRetMiss <= numRetMiss + 1;
+            Jmp : numJmpMiss <= numJmpMiss + 1;
+        endcase
     endmethod
 
     method Action incBPMissCnt();

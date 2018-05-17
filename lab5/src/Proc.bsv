@@ -115,7 +115,9 @@ module mkProc(Proc);
             let iType = eInst.iType;
 
             case (iType)
-                Call, Ret, Jmp: cop.incInstTypeCnt(Ctr);
+                Call: cop.incInstTypeCnt(Call);
+                Ret: cop.incInstTypeCnt(Ret);
+                Jmp: cop.incInstTypeCnt(Jmp);
                 MRmov, RMmov, Push, Pop: cop.incInstTypeCnt(Mem);
             endcase
 
@@ -156,7 +158,13 @@ module mkProc(Proc);
                 let redirPc = validValue(eInst.nextPc);
                 $display("mispredicted, redirect %d ", redirPc);
                 execRedirect.enq(redirPc);
+
                 cop.incBPMissCnt();
+                case (iType)
+                    Call: cop.incMissInstTypeCnt(Call);
+                    Ret: cop.incMissInstTypeCnt(Ret);
+                    Jmp: cop.incMissInstTypeCnt(Jmp);
+                endcase
             end
 
             /* WriteBack */
@@ -167,11 +175,6 @@ module mkProc(Proc);
                 rf.wrM(validRegValue(eInst.dstM), validValue(eInst.valM));
             end
             cop.wr(eInst.dstE, validValue(eInst.valE));
-
-            /* TODO: Excercise 4
-                1. Implement incInstTypeCnt(InstCntType inst) method in Cop.bsv
-                2. Use cop.incInstTypeCnt(inst) to count number of mispredictions for each instruction types.
-            */
         end
     endrule
 
