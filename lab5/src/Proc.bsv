@@ -36,25 +36,29 @@ module mkProc(Proc);
     Reg#(Bool) eEpoch <- mkRegU;
 
     rule doFetch(cop.started && stat == AOK);
-        /* TODO: Remove 1-cycle inefficiency when execRedirect is used. */
-
-        let inst = iMem.req(pc);
-        let iCode = getICode(inst);
-        let ppc = nextAddr(pc, iCode);
+        let current_pc;
+        let current_epoch;
 
         if (execRedirect.notEmpty) begin
             execRedirect.deq;
-            pc <= execRedirect.first;
-            fEpoch <= !fEpoch;
+            current_pc = execRedirect.first;
+            current_epoch = !fEpoch;
+            fEpoch <= current_epoch;
         end else begin
-            pc <= ppc;
+            current_pc = pc;
+            current_epoch = fEpoch;
         end
+
+        let inst = iMem.req(current_pc);
+        let iCode = getICode(inst);
+        let ppc = nextAddr(current_pc, iCode);
+        pc <= ppc;
 
         f2d.enq(Fetch2Decode{
                 inst: inst,
-                pc: pc,
+                pc: current_pc,
                 ppc: ppc,
-                epoch: fEpoch
+                epoch: current_epoch
             });
         $display("Fetch : from Pc %d , expanded inst : %x, \n", pc, inst, showInst(inst));
     endrule
