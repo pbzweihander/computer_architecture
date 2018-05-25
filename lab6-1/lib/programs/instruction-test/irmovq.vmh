@@ -1,0 +1,15 @@
+// Original Code
+// @000                	// .pos 0
+//                     	// Init:
+//                     	// # Test irmovq
+// 30f00000000000000000	//   0:  irmovq $0, %rax # rax = 0
+// 
+//                     	// # Check Result
+// c00e                	//  10:  mtc0 %rax, $14
+// 00                  	//  12:  halt
+
+
+// VMH Format Result
+@000
+30f0000000000000
+0000c00e00000000

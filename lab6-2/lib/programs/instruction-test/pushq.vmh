@@ -1,0 +1,37 @@
+// Original Code
+// @000                	// .pos 0
+//                     	// Init:
+//                     	// # Set Stack Pointer
+// 30f45000000000000000	//   0:  irmovq Stack, %rsp
+// 30f55000000000000000	//  10:  irmovq Stack, %rbp
+// 
+//                     	// # Push 3 into (%rsp)
+// 30f30300000000000000	//  20:  irmovq $3, %rbx  # rbx = 3
+// 30f0fdffffffffffffff	//  30:  irmovq $-3, %rax # rax = -3
+// a03f                	//  40:  pushq %rbx       # Stack -> [3]
+// 
+//                     	// # Stack
+//                     	// # - [rsp | rbp] +
+//                     	// # - [3   |    ] +
+//                     	// # Get the pushed value 3 by accessing -8(%rbp)
+// 5015f8ffffffffffffff	//  42:  mrmovq -8(%rbp), %rcx # rcx = 3
+// 
+//                     	// # Check the result
+// 6010                	//  52:  addq %rcx, %rax # rax = (-3) + 3 = 0
+// c00e                	//  54:  mtc0 %rax, $14
+// 00                  	//  56:  halt
+// 
+// @00a                	// .pos 80
+//                     	// Stack:
+
+
+// VMH Format Result
+@000
+30f4500000000000
+000030f550000000
+0000000030f30300
+00000000000030f0
+fdffffffffffffff
+a03f5015f8ffffff
+ffffffff6010c00e
+0000000000000000

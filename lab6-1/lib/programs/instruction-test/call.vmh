@@ -1,0 +1,37 @@
+// Original Code
+// @000                	// .pos 0
+//                     	// Init:
+//                     	// # Set Stack Pointer
+// 30f5a000000000000000	//   0:  irmovq Stack, %rbp
+// 30f4a000000000000000	//  10:  irmovq Stack, %rsp
+// 
+//                     	// # Call `Function`
+// 30f0ffffffffffffffff	//  20:  irmovq $-1, %rax # rax = -1
+// 805000000000000000  	//  30:  call Function
+// 
+//                     	// # If `Function` is not called properly, the code below will be executed.
+// c00e                	//  39:  mtc0 %rax, $14 # rax = -1 in here
+// 00                  	//  41:  halt
+// 
+// @00a                	// .pos 80
+//                     	// Function:
+//                     	// # call worked well if the code here is executed.
+// 30f00000000000000000	//  80:  irmovq $0, %rax # rax = 0
+// c00e                	//  90:  mtc0 %rax, $14
+// 00                  	//  92:  halt
+// 
+// @014                	// .pos 160
+//                     	// Stack:
+
+
+// VMH Format Result
+@000
+30f5a00000000000
+000030f4a0000000
+0000000030f0ffff
+ffffffffffff8050
+00000000000000c0
+0e00000000000000
+@00a
+30f0000000000000
+0000c00e00000000

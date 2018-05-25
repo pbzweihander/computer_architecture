@@ -1,0 +1,24 @@
+// Original Code
+// @000                	// .pos 0
+//                     	// Init:
+//                     	// # Set Values
+// 30f10100000000000000	//   0:  irmovq $1, %rcx  # rcx = 1
+// 30f20300000000000000	//  10:  irmovq $3, %rdx  # rdx = 3
+// 30f0fcffffffffffffff	//  20:  irmovq $-4, %rax # rax = -4
+// 
+//                     	// # Test addq
+// 6012                	//  30:  addq %rcx, %rdx  # rdx = 3 + 1 = 4
+// 6020                	//  32:  addq %rdx, %rax  # rax = (-4) + 4 = 0
+// 
+//                     	// # Check Result
+// c00e                	//  34:  mtc0 %rax, $14
+// 00                  	//  36:  halt
+
+
+// VMH Format Result
+@000
+30f1010000000000
+000030f203000000
+0000000030f0fcff
+ffffffffffff6012
+6020c00e00000000

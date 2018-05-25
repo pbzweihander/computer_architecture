@@ -1,0 +1,25 @@
+// Original Code
+// @000                	// .pos 0
+//                     	// Init:
+//                     	// # Set values
+// 30f00100000000000000	//   0:  irmovq $1, %rax # rax = 1
+// 30f30500000000000000	//  10:  irmovq $5, %rbx # rbx = 5
+// 30f10700000000000000	//  20:  irmovq $7, %rcx # rcx = 7
+// 
+//                     	// # Write-after-Read Hazard of %rax
+// 6003                	//  30:  addq %rax, %rbx # rbx = 1 + 5 = 6
+// 6110                	//  32:  subq %rcx, %rax # rax = 1 - 7 = -6
+// 6030                	//  34:  addq %rbx, %rax # rax = (-6) + 6 = 0
+// 
+//                     	// # Check result
+// c00e                	//  36:  mtc0 %rax, $14
+// 00                  	//  38:  halt
+
+
+// VMH Format Result
+@000
+30f0010000000000
+000030f305000000
+0000000030f10700
+0000000000006003
+61106030c00e0000

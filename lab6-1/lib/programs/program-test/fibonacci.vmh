@@ -1,0 +1,199 @@
+// Original Code
+//                     	// # Fibonacci Test Program
+//                     	// #
+//                     	// # This program iterates loop in `Main` function 12 times
+//                     	// # to compute and store fibonacci(1) ~ fibonacci(12) into memory.
+//                     	// # To compute fibonacci, this program computes f(n) = f(n - 2) + f(n - 1), recursively.
+//                     	// # The base case is f(0) = 0 and f(1) = 1.
+//                     	// # After computing fibonacci(1) ~ fibonacci(12), the `Main` function calls the `CheckResult` function
+//                     	// # that checks whether the fibonacci number computed is right by comparing the computed number
+//                     	// # with pre-computed fibonacci numbers.
+//                     	// #
+// 
+// @000                	// .pos 0
+//                     	// Init:
+//                     	// # Set stack pointer
+// 30f4b004000000000000	//   0:  irmovq Stack, %rsp
+// 30f4b004000000000000	//  10:  irmovq Stack, %rsp
+// 802000000000000000  	//  20:  call Main
+// 
+//                     	// # Terminate the program by checking the result
+// c00e                	//  29:  mtc0 %rax, $14
+// 00                  	//  31:  halt
+// 
+// @004                	// .pos 32
+//                     	// Main:
+// a05f                	//  32:  pushq %rbp
+// 2045                	//  34:  rrmovq %rsp, %rbp
+// 30fa0c00000000000000	//  36:  irmovq $12, %r10 # %r10 counts the remaining loop count
+// 30fb5802000000000000	//  46:  irmovq ResultArray, %r11 # %r11 indicates the memory address to store the computed result
+// 30fc0100000000000000	//  56:  irmovq $1, %r12 # the amount to decrement %r10(count)
+// 30fd0800000000000000	//  66:  irmovq $8, %r13 # the amount to increment %r11(memory address)
+//                     	// # fallthrough to `MainLoop`
+//                     	// MainLoop:
+//                     	// # This loop iterates and computes f(12) ~ f(1).
+// 20a7                	//  76:  rrmovq %r10, %rdi
+// 800001000000000000  	//  78:  call Fibonacci      # call Fibonacci(n)
+// 400b0000000000000000	//  87:  rmmovq %rax, (%r11) # save computed result.
+// 60db                	//  97:  addq %r13, %r11     # increment %r11 to indicate the next memory address
+// 61ca                	//  99:  subq %r12, %r10     # decrement %r10(remaining count), if count = 0 then ZF = 0 (equal)
+// 744c00000000000000  	// 101:  jne MainLoop
+// 
+//                     	// # Check the computed result.
+// 30f75802000000000000	// 110:  irmovq ResultArray, %rdi
+// 30f6c801000000000000	// 120:  irmovq AnswerArray, %rsi
+// 30f20c00000000000000	// 130:  irmovq $12, %rdx
+// 807801000000000000  	// 140:  call CheckResult
+// 
+//                     	// # Return `Main` function
+// 2054                	// 149:  rrmovq %rbp, %rsp
+// b05f                	// 151:  popq %rbp
+// 90                  	// 153:  ret
+// 
+//                     	// # int Fibonacci(int n)
+//                     	// # Returns the n-th fibonacci number, where f(0) = 0, f(1) = 1 and f(n) = f(n - 2) + f(n - 1)
+// @020                	// .pos 256
+//                     	// Fibonacci:
+// a05f                	// 256:  pushq %rbp
+// 2045                	// 258:  rrmovq %rsp, %rbp
+// 
+//                     	// # Check n = 0
+// 6277                	// 260:  andq %rdi, %rdi # if n = 0, ZF = 0 (equal)
+// 734b01000000000000  	// 262:  je Zero
+// 30f10100000000000000	// 271:  irmovq $1, %rcx
+// 6117                	// 281:  subq %rcx, %rdi # if n = 1, ZF = 0 (equal)
+// 735e01000000000000  	// 283:  je One
+// a07f                	// 292:  pushq %rdi # save (n - 1)
+// 6117                	// 294:  subq %rcx, %rdi # rdi = (n - 2)
+// 800001000000000000  	// 296:  call Fibonacci # f(n - 2)
+// b07f                	// 305:  popq %rdi # reload (n - 1)
+// a00f                	// 307:  pushq %rax # save the result of f(n - 2)
+// 800001000000000000  	// 309:  call Fibonacci # f(n - 1)
+// b01f                	// 318:  popq %rcx # reload f(n - 2) into rcx
+// 6010                	// 320:  addq %rcx, %rax # rax = f(n - 2) + f(n - 1) = f(n)
+// 706801000000000000  	// 322:  jmp Return
+//                     	// Zero:
+// 30f00000000000000000	// 331:  irmovq $0, %rax # f(0) = 0
+// 706801000000000000  	// 341:  jmp Return
+//                     	// One:
+// 30f00100000000000000	// 350:  irmovq $1, %rax # f(1) = 1
+//                     	// # fallthrough to `Return`
+//                     	// Return:
+// 2054                	// 360:  rrmovq %rbp, %rsp
+// b05f                	// 362:  popq %rbp
+// 90                  	// 364:  ret
+// 
+//                     	// # int CheckResult(int* computedArray, int* answerArray, int count)
+//                     	// # Returns 0 if fibonacci(1) ~ fibonacci(n) is computed right.
+// @02f                	// .pos 376
+//                     	// CheckResult:
+// a05f                	// 376:  pushq %rbp
+// 2045                	// 378:  rrmovq %rsp, %rbp
+// 
+// 30f30800000000000000	// 380:  irmovq $8, %rbx # increment for address
+// 30f10100000000000000	// 390:  irmovq $1, %rcx # decrement for count
+// 6300                	// 400:  xorq %rax, %rax # rax = 0
+//                     	// # fallthrough to `CheckLoop`
+//                     	// CheckLoop:
+// 50870000000000000000	// 402:  mrmovq (%rdi), %r8 # %r8 = computedFibonacci
+// 50960000000000000000	// 412:  mrmovq (%rsi), %r9 # %r9 = Answer
+// 6198                	// 422:  subq %r9, %r8 # (answer - result): should be 0 if fibonacci number is well-computed.
+// 6080                	// 424:  addq %r8, %rax # rax should remain 0 if fibonacci number if well-computed.
+// 6037                	// 426:  addq %rbx, %rdi # next computedFibonacci address
+// 6036                	// 428:  addq %rbx, %rsi # next Answer address
+// 6112                	// 430:  subq %rcx, %rdx # if count = 0, ZF = 0 (equal)
+// 749201000000000000  	// 432:  jne CheckLoop
+// 
+//                     	// # return
+// 2054                	// 441:  rrmovq %rbp, %rsp
+// b05f                	// 443:  popq %rbp
+// 90                  	// 445:  ret
+// 
+// @039                	// .pos 456
+//                     	// .align 8
+//                     	// # pre-computed fibonacci numbers, fibonacci(12) ~ fibonacci(1)
+//                     	// AnswerArray:
+// 9000000000000000    	// 456:  .quad 0x90
+// 5900000000000000    	// 464:  .quad 0x59
+// 3700000000000000    	// 472:  .quad 0x37
+// 2200000000000000    	// 480:  .quad 0x22
+// 1500000000000000    	// 488:  .quad 0x15
+// 0d00000000000000    	// 496:  .quad 0xd
+// 0800000000000000    	// 504:  .quad 0x8
+// 0500000000000000    	// 512:  .quad 0x5
+// 0300000000000000    	// 520:  .quad 0x3
+// 0200000000000000    	// 528:  .quad 0x2
+// 0100000000000000    	// 536:  .quad 0x1
+// 0100000000000000    	// 544:  .quad 0x1
+// 
+// @04b                	// .pos 600
+//                     	// .align 8
+//                     	// # an array that computed fibonacci numbers will be stored
+//                     	// ResultArray:
+// 
+// @096                	// .pos 1200
+//                     	// # Stack grows from high to low
+//                     	// Stack:
+
+
+// VMH Format Result
+@000
+30f4b00400000000
+000030f4b0040000
+0000000080200000
+0000000000c00e00
+@004
+a05f204530fa0c00
+00000000000030fb
+5802000000000000
+30fc010000000000
+000030fd08000000
+0000000020a78000
+0100000000000040
+0b00000000000000
+0060db61ca744c00
+00000000000030f7
+5802000000000000
+30f6c80100000000
+000030f20c000000
+0000000080780100
+00000000002054b0
+5f90000000000000
+@020
+a05f20456277734b
+0100000000000030
+f101000000000000
+006117735e010000
+00000000a07f6117
+8000010000000000
+00b07fa00f800001
+000000000000b01f
+6010706801000000
+00000030f0000000
+0000000000706801
+00000000000030f0
+0100000000000000
+2054b05f90000000
+@02f
+a05f204530f30800
+00000000000030f1
+0100000000000000
+6300508700000000
+0000000050960000
+0000000000006198
+6080603760366112
+7492010000000000
+002054b05f900000
+@039
+9000000000000000
+5900000000000000
+3700000000000000
+2200000000000000
+1500000000000000
+0d00000000000000
+0800000000000000
+0500000000000000
+0300000000000000
+0200000000000000
+0100000000000000
+0100000000000000
