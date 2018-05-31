@@ -1,0 +1,269 @@
+#!/bin/bash
+
+SRCPATH=./
+TESTHOME=../lib/programs
+INSTDIR=$TESTHOME/instruction-test
+HAZRDIR=$TESTHOME/hazard-test
+PROGDIR=$TESTHOME/program-test
+LOGDIR=./Logs
+BUILDDIR=../build
+BDIRDIR=$BUILDDIR/bdir
+BINDIR=$BUILDDIR/bin
+LIB=../lib
+
+function instruction_test {
+	cp $INSTDIR/$1.vmh $SRCPATH/memory.vmh
+	mkdir -p $LOGDIR/instruction
+	$BINDIR/sim > $LOGDIR/instruction/$1
+	rm memory.vmh
+}
+
+function hazard_test {
+	cp $HAZRDIR/$1.vmh $SRCPATH/memory.vmh
+	mkdir -p $LOGDIR/hazard
+	$BINDIR/sim > $LOGDIR/hazard/$1
+	rm memory.vmh
+}
+
+function program_test {
+	cp $PROGDIR/$1.vmh $SRCPATH/memory.vmh
+	mkdir -p $LOGDIR/program
+	$BINDIR/sim > $LOGDIR/program/$1
+	rm memory.vmh
+}
+
+function clean {
+	rm -rf $BUILDDIR
+	rm -rf $LOGDIR
+	rm -f  decode_result
+	rm -rf ./bdir
+	rm -rf ./build
+	rm -rf ./Log
+	rm -f ./sim.so
+	rm -f ./sim
+}
+
+function compile {
+	mkdir -p $BUILDDIR
+	mkdir -p $BDIRDIR
+	mkdir -p $BINDIR
+	bsc -u -sim -aggressive-conditions -no-warn-action-shadowing -p +:$LIB/common-lib -simdir $BDIRDIR -info-dir $BDIRDIR -bdir $BDIRDIR $LIB/common-lib/TestBench.bsv
+	bsc -u -sim -e mkTestBench -bdir $BDIRDIR -info-dir $BDIRDIR -simdir $BDIRDIR -o $BINDIR/sim $BDIRDIR/*.ba
+}
+
+function test_all {
+    echo " "
+    echo "=============== Instruction Test ==============="
+	echo " "
+	echo "testing irmovq"
+	instruction_test irmovq
+
+
+	echo " "
+	echo "testing addq"
+	instruction_test addq
+
+	echo " "
+	echo "testing subq"
+	instruction_test subq
+
+	echo " "
+	echo "testing andq"
+	instruction_test andq
+
+	echo " "
+	echo "testing xorq"
+	instruction_test xorq
+
+	echo " "
+	echo "testing rrmovq"
+	instruction_test rrmovq
+
+	echo " "
+	echo "testing mrmovq"
+	instruction_test mrmovq
+
+	echo " "
+	echo "testing rmmovq"
+	instruction_test rmmovq
+
+	echo " "
+	echo "testing cmovg"
+	instruction_test cmovg
+
+	echo " "
+	echo "testing cmovge"
+	instruction_test cmovge
+
+	echo " "
+	echo "testing cmove"
+	instruction_test cmove
+
+	echo " "
+	echo "testing cmovne"
+	instruction_test cmovne
+
+	echo " "
+	echo "testing cmovle"
+	instruction_test cmovle
+
+	echo " "
+	echo "testing cmovl"
+	instruction_test cmovl
+
+	echo " "
+	echo "testing jmp"
+	instruction_test jmp
+
+	echo " "
+	echo "testing jg"
+	instruction_test jg
+
+	echo " "
+	echo "testing jge"
+	instruction_test jge
+
+	echo " "
+	echo "testing je"
+	instruction_test je
+
+	echo " "
+	echo "testing jne"
+	instruction_test jne
+
+	echo " "
+	echo "testing jle"
+	instruction_test jle
+
+	echo " "
+	echo "testing jl"
+	instruction_test jl
+
+	echo " "
+	echo "testing pushq"
+	instruction_test pushq
+
+	echo " "
+	echo "testing popq"
+	instruction_test popq
+
+	echo " "
+	echo "testing call"
+	instruction_test call
+
+	echo " "
+	echo "testing ret"
+	instruction_test ret
+
+    echo " "
+    echo " "
+    echo "=============== Hazard Test ==============="
+
+	echo " "
+	echo "testing control"
+	hazard_test control
+
+	echo " "
+	echo "testing raw"
+	hazard_test raw
+
+	echo " "
+	echo "testing war"
+	hazard_test war
+
+	echo " "
+	echo "testing waw"
+	hazard_test waw
+
+    echo " "
+    echo " "
+    echo "=============== Program Test ==============="
+
+	echo " "
+	echo "testing array_sum_1d"
+	program_test array_sum_1d
+
+	echo " "
+	echo "testing array_sum_ij"
+	program_test array_sum_ij
+
+	echo " "
+	echo "testing array_sum_ji"
+	program_test array_sum_ji
+
+
+	echo " "
+	echo "testing hanoi_tower"
+	program_test hanoi_tower
+
+	echo " "
+	echo "testing bubble_sort"
+	program_test bubble_sort
+
+    echo " "
+	echo "testing fibonacci"
+	program_test fibonacci
+
+	echo " "
+	echo "testing associativity_benchmark"
+	program_test associativity_benchmark
+
+	rm -f memory.vmh
+}
+
+case "$1" in
+	-c) clean;
+		compile;;
+	-clean) clean;;
+	-r) test_all;;
+	-i)
+		if [ -f $INSTDIR/$2.vmh ]; then
+            echo " "
+			echo "testing $2"
+			instruction_test $2
+			rm -f memory.vmh
+		else
+			echo "Instruction test '$2' not found."
+		fi;;
+	-z)
+		if [ -f $HAZRDIR/$2.vmh ]; then
+            echo " "
+			echo "testing $2"
+			hazard_test $2;
+			rm -f memory.vmh
+		else
+			echo "Hazard test '$2' not found."
+		fi;;
+  	-p)
+        if [ -f $PROGDIR/$2.vmh ]; then
+            echo " "
+  			echo "testing $2"
+			program_test $2;
+  			rm -f memory.vmh
+  		else
+  			echo "Program test '$2' not found."
+  		fi;;
+	-h|--help|*)  echo " ";
+				  echo "Usage : $0 [-c: compile all] [-clean: cleanup build files] [-r: test all] [-i/-z/-p <test_name>: test specific instruction/hazard/program. <test_name> list is shown below.]";
+                  echo "  Instruction Test(Below one has dependency to upper one.)";
+				  echo "    irmovq";
+				  echo "    [addq, subq, andq, xorq]";
+				  echo "    rrmovq";
+				  echo "    mrmovq";
+				  echo "    rmmovq";
+				  echo "    [cmovg, cmovge, cmove, cmovne, cmovle, cmovl]";
+				  echo "    [jmp, jg, jge, je, jne, jle, jl]";
+				  echo "    pushq";
+				  echo "    popq";
+				  echo "    call";
+				  echo "    ret";
+				  echo " ";
+		  		  echo "  Hazard Test";
+				  echo "    control";
+				  echo "    [raw, war, waw]";
+				  echo " ";
+		  		  echo "  Program Test";
+				  echo "    [array_sum_1d, array_sum_ij, array_sum_ji]"
+                  echo "    [hanoi_tower, bubble_sort, fibonacci]"
+				  echo "    [associativity_benchmark]";;
+esac
