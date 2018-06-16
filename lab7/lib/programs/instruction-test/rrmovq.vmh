@@ -1,0 +1,27 @@
+// Original Code
+// @000                	// .pos 0
+//                     	// Init:
+//                     	// # Set Values
+// 30f30200000000000000	//   0:  irmovq $2, %rbx  # rbx = 2
+// 30f10300000000000000	//  10:  irmovq $3, %rcx  # rcx = 3
+// 30f0fbffffffffffffff	//  20:  irmovq $-5, %rax # rax = -5
+// 
+//                     	// # Move Register values into other registers
+// 2032                	//  30:  rrmovq %rbx, %rdx  # rdx = rbx = 2
+// 2016                	//  32:  rrmovq %rcx, %rsi  # rsi = rcx = 3
+// 
+//                     	// # Check Result
+// 6020                	//  34:  addq %rdx, %rax  # rax = (-5) + 2 = (-3)
+// 6060                	//  36:  addq %rsi, %rax  # rax = (-3) + 3 = 0
+// c00e                	//  38:  mtc0 %rax, $14
+// 00                  	//  40:  halt
+
+
+// VMH Format Result
+@000
+30f3020000000000
+000030f103000000
+0000000030f0fbff
+ffffffffffff2032
+201660206060c00e
+0000000000000000
