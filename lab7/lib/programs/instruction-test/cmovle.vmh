@@ -1,0 +1,30 @@
+// Original Code
+// @000                	// .pos 0
+//                     	// Init:
+//                     	// # Set Values
+// 30f6f9ffffffffffffff	//   0:  irmovq $-7, %rsi  # rsi = -7
+// 30f3ffffffffffffffff	//  10:  irmovq $-1, %rbx  # rbx = -1
+// 30f10000000000000000	//  20:  irmovq $0, %rcx   # rcx = 0
+// 30f0ffffffffffffffff	//  30:  irmovq $-1, %rax  # rax = -1
+// 
+//                     	// # Test cmovge
+// 6266                	//  40:  andq %rsi, %rsi   # SF = 1 and ZF = 0 (Less)
+// 2113                	//  42:  cmovle %rcx, %rbx # rbx = 0
+// 
+// 6311                	//  44:  xorq %rcx, %rcx   # ZF = 1 (Equal)
+// 2130                	//  46:  cmovle %rbx, %rax # rax = 0
+// 
+//                     	// # Check result
+// c00e                	//  48:  mtc0 %rax, $14
+// 00                  	//  50:  halt
+
+
+// VMH Format Result
+@000
+30f6f9ffffffffff
+ffff30f3ffffffff
+ffffffff30f10000
+00000000000030f0
+ffffffffffffffff
+6266211363112130
+c00e000000000000

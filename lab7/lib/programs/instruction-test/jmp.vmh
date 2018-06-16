@@ -1,0 +1,28 @@
+// Original Code
+// @000                	// .pos 0
+//                     	// Init:
+//                     	// # Set values
+// 30f0ffffffffffffffff	//   0:  irmovq $-1, %rax # rax = -1
+// 
+//                     	// # Test jmp
+// 704800000000000000  	//  10:  jmp Dest
+// 
+//                     	// # Wrong Answer if not jumped
+// c00e                	//  19:  mtc0 %rax, $14  # rax = -1 here
+// 00                  	//  21:  halt
+// 
+// @009                	// .pos 72
+//                     	// Dest:
+// 30f00000000000000000	//  72:  irmovq $0, %rax # rax = 0
+// c00e                	//  82:  mtc0 %rax, $14  # rax = 0 here
+// 00                  	//  84:  halt
+
+
+// VMH Format Result
+@000
+30f0ffffffffffff
+ffff704800000000
+000000c00e000000
+@009
+30f0000000000000
+0000c00e00000000
