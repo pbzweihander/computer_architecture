@@ -19,7 +19,7 @@ endinterface
 typedef enum {Ready, StartMiss, SendFillReq, WaitFillResp} CacheStatus deriving (Bits, Eq);
 
 module mkCacheDirectMap(Cache);
-    RegFile#(CacheIndex, Line) dataArray <- mkRegFileFull;
+    RegFile#(CacheIndex, Data) dataArray <- mkRegFileFull;
     RegFile#(CacheIndex, Maybe#(CacheTag)) tagArray <- mkRegFileFull;
     RegFile#(CacheIndex, Bool) dirtyArray <- mkRegFileFull;
 
@@ -54,26 +54,76 @@ module mkCacheDirectMap(Cache);
         dirtyArray.upd(truncate(init), False);
     endrule
 
-    /* TODO: Implement rules below to implement direct-mapped cache. */
-
     rule startMiss(status == StartMiss);
-        /* TODO: Implement here */
+        let idx = getIdx(missReq.addr);
+        let tag = getTag(missReq.addr);
+        if (isValid(tagArray.sub(idx)) && dirtyArray.sub(idx)) begin
+            let data = dataArray.sub(idx);
+            Line line = newVector;
+            line[0] = data;
+            memReqQ.enq(CacheMemReq {
+                    op: St,
+                    addr: getBlockAddr(validValue(tagArray.sub(idx)), idx),
+                    data: line,
+                    burstLength: 1
+                });
+        end
+        status <= SendFillReq;
     endrule
 
     rule sendFillReq(status == SendFillReq);
-        /* TODO: Implement here */
+        memReqQ.enq(CacheMemReq {
+                op: Ld,
+                addr: missReq.addr,
+                data: ?,
+                burstLength: 1
+            });
+        status <= WaitFillResp;
     endrule
 
     rule waitFillResp(status == WaitFillResp);
-        /* TODO: Implement here */
+        memRespQ.deq;
+        let data = memRespQ.first;
+        let tag = getTag(missReq.addr);
+        let idx = getIdx(missReq.addr);
+        dataArray.upd(idx, data[0]);
+        tagArray.upd(idx, tagged Valid tag);
+        dirtyArray.upd(idx, False);
+        hitQ.enq(data[0]);
+        status <= Ready;
     endrule
 
     method Action req(MemReq r) if (status == Ready && inited);
-        /* TODO: Implement here */
+        let idx = getIdx(r.addr);
+        let tag = getTag(r.addr);
+        let cachedTag = tagArray.sub(idx);
+        let hit = isValid(cachedTag)
+            ? validValue(cachedTag) == tag
+            : False;
 
-        let hit = ?;
+        if (r.op == Ld) begin
+            if (hit) begin
+                hitQ.enq(dataArray.sub(idx));
+            end else begin
+                status <= StartMiss;
+                missReq <= r;
+            end
+        end else begin
+            if (hit) begin
+                dataArray.upd(idx, r.data);
+                dirtyArray.upd(idx, True);
+            end else begin
+                Line line = newVector;
+                line[0] = r.data;
+                memReqQ.enq(CacheMemReq {
+                        op: St,
+                        addr: r.addr,
+                        data: line,
+                        burstLength: 1
+                    });
+            end
+        end
 
-        /* DO NOT MODIFY BELOW HERE! */
         if(!hit) begin
             missCnt <= missCnt + 1;
         end

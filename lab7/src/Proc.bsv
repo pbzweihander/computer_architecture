@@ -42,11 +42,11 @@ typedef Maybe#(ExecInst) Memory2WriteBack;
 (*synthesize*)
 module mkProc(Proc);
     Reg#(Addr) pc <- mkRegU;
-    RFilerf <- mkBypassRFile;
+    RFile rf <- mkBypassRFile;
     Memory mem <- mkMemory;
     IMemory iMem <- mkIMemory;
     Cop cop <- mkBypassCop;
-    AddrPredpcPred <- mkBtb;
+    AddrPred pcPred <- mkBtb;
     DirPred dirPred <- mkBHT;
 
     Cache dCache <- mkCache;
@@ -258,8 +258,11 @@ module mkProc(Proc);
             let iType = eInst.iType;
             case(iType)
                 MRmov, Pop, Ret: begin
-                /* TODO: Change this part to make processor use dCache */
-                    mem.dReq(CacheMemReq{op: Ld, addr: eInst.memAddr, data:?, burstLength : 1});
+                    dCache.req(MemReq {
+                            op: Ld,
+                            addr: eInst.memAddr,
+                            data: ?
+                        });
                 end
 
                 RMmov, Call, Push: begin
@@ -267,14 +270,10 @@ module mkProc(Proc);
                         ? eInst.valP
                         : validValue(eInst.valA);
 
-                    /* TODO: Change this part to make processor use dCache */
-                    Line stLine = newVector;
-                    stLine[0] = big2LittleEndian(stData);
-                    mem.dReq(CacheMemReq {
+                    dCache.req(MemReq {
                             op: St,
                             addr: eInst.memAddr,
-                            data: stLine,
-                            burstLength: 1
+                            data: big2LittleEndian(stData)
                         });
                     $display("Store %d on %d", stData, eInst.memAddr);
                 end
@@ -297,15 +296,12 @@ module mkProc(Proc);
         if (isValid(m12m2.first.eInst)) begin
             let eInst = validValue(m12m2.first.eInst);
             let ipc = m12m2.first.pc;
-            Data ldData =?;
+            Data ldData = ?;
             case(eInst.iType)
                 MRmov, Pop, Ret: begin
-                /* TODO: Change this part to make processor use dCache */
-                let dResp <- mem.dResp;
-                ldData = dResp[0];
-
-                 eInst.valM = Valid(little2BigEndian(ldData));
-                 $display("Loaded %d from %d", little2BigEndian(ldData), eInst.memAddr);
+                    ldData <- dCache.resp;
+                    eInst.valM = Valid(little2BigEndian(ldData));
+                    $display("Loaded %d from %d", little2BigEndian(ldData), eInst.memAddr);
                 end
             endcase
 
@@ -360,8 +356,8 @@ module mkProc(Proc);
     endrule
 
     /* TODO: Activate these two lines to use cache */
-    //mkConnection(mem.dReq, dCache.memReq);
-    //mkConnection(mem.dResp, dCache.memResp);
+    mkConnection(mem.dReq, dCache.memReq);
+    mkConnection(mem.dResp, dCache.memResp);
 
     method ActionValue#(Tuple3#(RIndx, Data, Data)) cpuToHost;
         let retV <- cop.cpuToHost;
